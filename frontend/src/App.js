@@ -7,12 +7,15 @@ import TechnicianDashboard from './pages/TechnicianDashboard';
 import ReportingDashboard from './pages/ReportingDashboard';
 import TicketDetailsPage from './pages/TicketDetailsPage';
 import AdminDashboard from './pages/AdminDashboard';
+import BookingRequestPage from './pages/Booking/BookingRequestPage'; // Booking
+import MyBookings from './pages/Booking/MyBookings'; // Booking
+import BookingAdminDashboard from './pages/Booking/AdminDashboard'; // Booking (Renamed to avoid conflict)
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Redirect root to student by default, or just leave it empty if user prefers */}
+        {/* Redirect root to student by default */}
         <Route path="/" element={<Navigate to="/student" replace />} />
 
         {/* Student Routes */}
@@ -20,6 +23,8 @@ function App() {
           <Route index element={<TicketListPage />} />
           <Route path="create" element={<TicketCreationPage />} />
           <Route path="ticket/:id" element={<TicketDetailsPage />} />
+          <Route path="book" element={<BookingRequestPage />} /> {/* Booking */}
+          <Route path="my-bookings" element={<MyBookings />} /> {/* Booking */}
         </Route>
 
         {/* Technician Routes */}
@@ -33,6 +38,7 @@ function App() {
           <Route index element={<AdminDashboard />} />
           <Route path="reports" element={<ReportingDashboard />} />
           <Route path="ticket/:id" element={<TicketDetailsPage />} />
+          <Route path="manage-bookings" element={<BookingAdminDashboard />} /> {/* Booking */}
         </Route>
       </Routes>
     </BrowserRouter>
