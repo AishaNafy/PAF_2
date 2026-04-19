@@ -1,15 +1,15 @@
-package com.smartcampus.Booking; // Match the folder name exactly
+package com.smartcampus.Booking;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document; // Correct for MongoDB
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Document(collection = "bookings") // Replace @Entity with @Document
+@Document(collection = "bookings")
 public class Booking {
     
     @Id 
-    private String id; // Use String for MongoDB IDs to fix Long conversion errors
+    private String id; // String type is required to store formatted IDs like "B001"
 
     private Long resourceId;
     private String userEmail;

@@ -12,8 +12,16 @@ public class BookingController {
     @Autowired
     private BookingRepository repository;
 
+    // Inject the new sequence service
+    @Autowired
+    private SequenceGeneratorService sequenceGenerator;
+
     @PostMapping
     public Booking createBooking(@RequestBody Booking booking) {
+        // Automatically calculate and set the ID starting as B001
+        // This logic ensures deleted IDs can be reused
+        String newId = sequenceGenerator.generateAvailableId();
+        booking.setId(newId);
         return repository.save(booking);
     }
 
@@ -25,7 +33,7 @@ public class BookingController {
 
     @PutMapping("/{id}/status")
     public Booking updateStatus(
-        @PathVariable String id, // Matches String ID in model
+        @PathVariable String id, 
         @RequestParam String status, 
         @RequestParam(required = false) String reason
     ) {
