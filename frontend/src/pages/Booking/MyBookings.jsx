@@ -27,13 +27,14 @@ const MyBookings = () => {
             <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
                     <thead>
-                        {/* Header background color remains as per your previous design */}
                         <tr style={{ backgroundColor: '#dafff7', textAlign: 'left' }}>
                             <th style={{ padding: '12px' }}>Resource ID</th>
+                            <th>Location</th> {/* Added Column */}
+                            <th>Attendees</th> {/* Added Column */}
                             <th>Date</th>
-                            {/* Split Time into Start and End as requested */}
                             <th>Start Time</th>
                             <th>End Time</th>
+                            <th>Purpose</th> {/* Added Column */}
                             <th>Status</th>
                             <th style={{ textAlign: 'right', paddingRight: '20px' }}>Actions</th>
                         </tr>
@@ -42,10 +43,12 @@ const MyBookings = () => {
                         {myBookings.map(b => (
                             <tr key={b.id} style={{ borderBottom: '1px solid #dafff7' }}>
                                 <td style={{ padding: '12px' }}>{b.resourceId}</td>
+                                <td>{b.location}</td> {/* Data for Location */}
+                                <td>{b.attendees}</td> {/* Data for Attendees */}
                                 <td>{b.date}</td>
-                                {/* Added Start and End Time fields */}
                                 <td>{b.startTime}</td>
                                 <td>{b.endTime}</td>
+                                <td>{b.purpose}</td> {/* Data for Purpose */}
                                 <td style={{ 
                                     fontWeight: 'bold', 
                                     color: b.status === 'APPROVED' ? '#36bdac' : '#010101' 
@@ -53,7 +56,6 @@ const MyBookings = () => {
                                 <td style={{ textAlign: 'right', paddingRight: '20px' }}>
                                     {b.status !== 'CANCELLED' && (
                                         <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                                            {/* Cancel button styled like the "Cancel" button in 3rd pic */}
                                             <button 
                                                 onClick={() => handleCancel(b.id)}
                                                 style={{ 
@@ -68,7 +70,6 @@ const MyBookings = () => {
                                             >
                                                 Cancel
                                             </button>
-                                            {/* Submit/Action button styled like the "Submit Ticket" button in 3rd pic */}
                                             <button 
                                                 style={{ 
                                                     backgroundColor: '#14b8a6', 

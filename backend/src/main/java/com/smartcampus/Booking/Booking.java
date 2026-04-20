@@ -12,6 +12,7 @@ public class Booking {
     private String id; // String type is required to store formatted IDs like "B001"
 
     private Long resourceId;
+    private String location;
     private String userEmail;
     private LocalDate date;
     private LocalTime startTime;

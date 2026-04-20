@@ -1,21 +1,25 @@
 import React, { useState } from 'react';
 
 const BookingRequestPage = () => {
-    // Defines missing formData and setFormData
     const [formData, setFormData] = useState({
         resourceId: '',
+        location: '',
+        userEmail: 'user@sliit.lk',
         date: '',
         startTime: '',
         endTime: '',
         purpose: '',
-        userEmail: 'user@sliit.lk' // Ensure email is included for the backend repository
+        attendees: 1,
     });
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        const updatedValue = (name === 'resourceId' || name === 'attendees') 
+            ? parseInt(value) || '' 
+            : value;
+        setFormData({ ...formData, [name]: updatedValue });
     };
 
-    // Updated handleSubmit to receive and show the B001 style ID
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -26,21 +30,13 @@ const BookingRequestPage = () => {
             });
 
             if (response.ok) {
-                const savedData = await response.json(); // Gets the response from SequenceGeneratorService
-                alert(`Booking submitted successfully! Your ID is: ${savedData.id}`);
-                
-                // Clear form after success
-                setFormData({
-                    resourceId: '',
-                    date: '',
-                    startTime: '',
-                    endTime: '',
-                    purpose: '',
-                    userEmail: 'user@sliit.lk'
-                });
+                const savedData = await response.json(); 
+                alert(`Booking submitted! ID: ${savedData.id}`);
+            } else {
+                const errorText = await response.text();
+                alert(`Server Error: ${errorText}`);
             }
         } catch (error) {
-            console.error("Error submitting booking:", error);
             alert("Submission failed. Check backend connection.");
         }
     };
@@ -49,48 +45,50 @@ const BookingRequestPage = () => {
         <div className="p-6">
             <h2 className="text-2xl font-bold mb-4">New Booking</h2>
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md max-w-2xl">
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Resource ID</label>
-                    <input name="resourceId" value={formData.resourceId} placeholder="e.g. Lab 01" onChange={handleChange} className="w-full p-2 border rounded"/>
+                {/* Row 1: ID and Location */}
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Resource ID (Number)</label>
+                        <input type="number" name="resourceId" value={formData.resourceId} onChange={handleChange} className="w-full p-2 border rounded" required />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                        <input name="location" value={formData.location} placeholder="e.g. Building A" onChange={handleChange} className="w-full p-2 border rounded" required />
+                    </div>
                 </div>
 
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                    <input type="date" name="date" value={formData.date} onChange={handleChange} className="w-full p-2 border rounded"/>
+                {/* Row 2: Attendees and Date */}
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Attendees</label>
+                        <input type="number" name="attendees" value={formData.attendees} onChange={handleChange} className="w-full p-2 border rounded" required />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                        <input type="date" name="date" value={formData.date} onChange={handleChange} className="w-full p-2 border rounded" required />
+                    </div>
                 </div>
 
+                {/* Row 3: Times */}
                 <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
-                        <input type="time" name="startTime" value={formData.startTime} onChange={handleChange} className="w-full p-2 border rounded"/>
+                        <input type="time" name="startTime" value={formData.startTime} onChange={handleChange} className="w-full p-2 border rounded" required />
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">End Time</label>
-                        <input type="time" name="endTime" value={formData.endTime} onChange={handleChange} className="w-full p-2 border rounded"/>
+                        <input type="time" name="endTime" value={formData.endTime} onChange={handleChange} className="w-full p-2 border rounded" required />
                     </div>
                 </div>
 
                 <div className="mb-6">
                     <label className="block text-sm font-medium text-gray-700 mb-1">Purpose</label>
-                    <textarea name="purpose" value={formData.purpose} placeholder="Describe the reason for booking" onChange={handleChange} className="w-full p-2 border rounded h-24"/>
+                    <textarea name="purpose" value={formData.purpose} onChange={handleChange} className="w-full p-2 border rounded h-24" required />
                 </div>
 
                 <div className="flex gap-3">
-                    <button 
-                        type="submit" 
-                        className="bg-teal-500 text-white px-6 py-2 rounded-md hover:bg-teal-600 font-medium transition-colors"
-                    >
-                        Submit Request
-                    </button>
-                    
-                    {/* Added Cancel button to match your requested layout */}
-                    <button 
-                        type="button"
-                        onClick={() => window.history.back()}
-                        className="bg-gray-200 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-300 font-medium transition-colors"
-                    >
-                        Cancel
-                    </button>
+                    <button type="submit" className="bg-teal-500 text-white px-6 py-2 rounded-md hover:bg-teal-600">Submit Request</button>
+                    <button type="button" onClick={() => window.history.back()} className="bg-gray-200 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-300">Cancel</button>
                 </div>
             </form>
         </div>

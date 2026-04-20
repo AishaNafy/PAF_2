@@ -1,13 +1,12 @@
-package com.smartcampus.Booking; // Removed the 's' to match folder structure
+package com.smartcampus.Booking; // Fixed: Matches your folder name exactly
 
-import org.springframework.data.mongodb.repository.MongoRepository; // Fixes import errors
+import org.springframework.data.mongodb.repository.MongoRepository; // Use Mongo, not JPA
+import org.springframework.stereotype.Repository;
 import java.util.List;
 
+@Repository
 public interface BookingRepository extends MongoRepository<Booking, String> {
     
-    // Fixes the "cannot find symbol findByUserEmail" in Controller
+    // This allows the controller to filter bookings by user email
     List<Booking> findByUserEmail(String userEmail);
-    
-    // Note: MongoDB does not use @Query in the same way as JPA. 
-    // Standard derived queries work best for basic filtering.
 }
