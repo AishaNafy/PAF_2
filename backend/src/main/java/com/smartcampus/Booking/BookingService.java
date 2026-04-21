@@ -11,16 +11,20 @@ import java.util.List;
 @Service
 public class BookingService {
 
-    @Autowired private BookingRepository      repository;
+    @Autowired private BookingRepository        repository;
     @Autowired private SequenceGeneratorService sequenceGenerator;
 
-    // ── CREATE ──────────────────────────────────────────────────────
+    // ── CREATE ───────────────────────────────────────────────────────
 
     public Booking createBooking(Booking booking) {
+
+        // ── Field validation ─────────────────────────────────────────
         if (booking.getStudentId() == null || booking.getStudentId().isBlank())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student ID is required.");
         if (booking.getResourceId() == null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Resource ID is required.");
+        if (booking.getLocation() == null || booking.getLocation().isBlank())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is required.");
         if (booking.getDate() == null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Date is required.");
         if (booking.getStartTime() == null || booking.getEndTime() == null)
@@ -28,14 +32,23 @@ public class BookingService {
         if (!booking.getEndTime().isAfter(booking.getStartTime()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End time must be after start time.");
 
-        // Conflict check
+        // ── Conflict check: same location + same date + time overlap ─
         List<Booking> conflicts = repository.findConflictingBookings(
-                booking.getResourceId(), booking.getDate(),
-                booking.getStartTime(), booking.getEndTime());
-        if (!conflicts.isEmpty())
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "This resource is already booked during the requested time slot.");
+                booking.getLocation().trim(),
+                booking.getDate(),
+                booking.getStartTime(),
+                booking.getEndTime()
+        );
 
+        if (!conflicts.isEmpty()) {
+            Booking clash = conflicts.get(0);
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "⚠ Time slot unavailable! \"" + booking.getLocation() + "\" is already booked on "
+                    + booking.getDate() + " from " + clash.getStartTime() + " to " + clash.getEndTime()
+                    + ". Please choose a different time or location.");
+        }
+
+        // ── Save ─────────────────────────────────────────────────────
         booking.setId(sequenceGenerator.generateAvailableId());
         booking.setStatus("PENDING");
         booking.setCreatedAt(LocalDateTime.now());
@@ -45,7 +58,6 @@ public class BookingService {
 
     // ── READ ─────────────────────────────────────────────────────────
 
-    /** Returns all bookings, optionally filtered by status */
     public List<Booking> getBookings(String status) {
         if (status != null && !status.isBlank()) return repository.findByStatus(status);
         return repository.findAll();

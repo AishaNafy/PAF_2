@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   CalendarDays, Clock, Users, MapPin,
-  Briefcase, Hash, Send, AlertCircle, BadgeInfo
+  Briefcase, Hash, Send, AlertCircle, BadgeInfo, AlertTriangle
 } from 'lucide-react';
 
 const API = 'http://localhost:8080/api/bookings';
@@ -24,16 +24,41 @@ const EMPTY_FORM = {
   attendees:  1,
 };
 
+// ── Conflict banner — shown when backend returns 409 ─────────────────
+const ConflictBanner = ({ message, onClose }) => (
+  <div className="mb-5 rounded-xl border-2 border-orange-400 bg-orange-50 p-4 flex gap-3">
+    <div className="shrink-0 mt-0.5">
+      <AlertTriangle size={22} className="text-orange-500" />
+    </div>
+    <div className="flex-1">
+      <p className="font-bold text-orange-700 text-sm mb-0.5">Booking Conflict Detected</p>
+      <p className="text-orange-600 text-sm leading-relaxed">{message}</p>
+      <p className="text-orange-500 text-xs mt-2">
+        💡 Try a different time slot or a different location.
+      </p>
+    </div>
+    <button onClick={onClose} className="shrink-0 text-orange-400 hover:text-orange-600 text-lg leading-none">✕</button>
+  </div>
+);
+
+// ── Generic error banner ──────────────────────────────────────────────
+const ErrorBanner = ({ message }) => (
+  <div className="flex items-center gap-2 mb-4 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+    <AlertCircle size={16} className="shrink-0" /> {message}
+  </div>
+);
+
 const BookingRequestPage = () => {
-  const [form,    setForm]    = useState(EMPTY_FORM);
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState('');
-  const [error,   setError]   = useState('');
+  const [form,     setForm]     = useState(EMPTY_FORM);
+  const [loading,  setLoading]  = useState(false);
+  const [success,  setSuccess]  = useState('');
+  const [error,    setError]    = useState('');
+  const [conflict, setConflict] = useState(''); // 409 message
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
-    setError(''); setSuccess('');
+    setError(''); setSuccess(''); setConflict('');
   };
 
   const validate = () => {
@@ -60,7 +85,8 @@ const BookingRequestPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); setSuccess('');
+    setError(''); setSuccess(''); setConflict('');
+
     const ve = validate();
     if (ve) { setError(ve); return; }
 
@@ -74,11 +100,17 @@ const BookingRequestPage = () => {
       };
 
       const res  = await fetch(API, {
-        method: 'POST',
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body:    JSON.stringify(payload),
       });
       const data = await res.json();
+
+      if (res.status === 409) {
+        // Time-slot conflict — show prominent orange warning
+        setConflict(data.error || 'This time slot is already booked for that location.');
+        return;
+      }
 
       if (res.ok) {
         setSuccess(`Booking ${data.id} submitted successfully! Status: PENDING review.`);
@@ -102,11 +134,15 @@ const BookingRequestPage = () => {
         </p>
       </div>
 
-      {error && (
-        <div className="flex items-center gap-2 mb-4 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
-          <AlertCircle size={16} className="shrink-0" /> {error}
-        </div>
+      {/* Conflict warning — 409 */}
+      {conflict && (
+        <ConflictBanner message={conflict} onClose={() => setConflict('')} />
       )}
+
+      {/* Generic error */}
+      {error && <ErrorBanner message={error} />}
+
+      {/* Success */}
       {success && (
         <div className="flex items-center gap-2 mb-4 px-4 py-3 rounded-lg bg-[#dafff7] border border-[#36bdac] text-[#010101] text-sm font-medium">
           ✅ {success}
@@ -162,9 +198,14 @@ const BookingRequestPage = () => {
               value={form.location}
               onChange={handleChange}
               placeholder="e.g. Lab A, Room 204"
-              className={inputClass}
+              className={`${inputClass} ${conflict ? 'border-orange-400 ring-2 ring-orange-200' : ''}`}
               required
             />
+            {conflict && (
+              <p className="text-xs text-orange-500 mt-1">
+                ↑ Change location or pick a different time below
+              </p>
+            )}
           </div>
           <div>
             <label className={labelClass}>
@@ -207,7 +248,7 @@ const BookingRequestPage = () => {
               name="startTime"
               value={form.startTime}
               onChange={handleChange}
-              className={inputClass}
+              className={`${inputClass} ${conflict ? 'border-orange-400 ring-2 ring-orange-200' : ''}`}
               required
             />
           </div>
@@ -220,7 +261,7 @@ const BookingRequestPage = () => {
               name="endTime"
               value={form.endTime}
               onChange={handleChange}
-              className={inputClass}
+              className={`${inputClass} ${conflict ? 'border-orange-400 ring-2 ring-orange-200' : ''}`}
               required
             />
           </div>
@@ -248,7 +289,7 @@ const BookingRequestPage = () => {
           style={{ backgroundColor: loading ? '#36bdac99' : '#36bdac' }}
         >
           <Send size={16} />
-          {loading ? 'Submitting…' : 'Submit Booking Request'}
+          {loading ? 'Checking availability…' : 'Submit Booking Request'}
         </button>
       </form>
     </div>

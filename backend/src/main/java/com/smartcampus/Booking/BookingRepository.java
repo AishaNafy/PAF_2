@@ -11,16 +11,27 @@ import java.util.List;
 @Repository
 public interface BookingRepository extends MongoRepository<Booking, String> {
 
-    // Filter by student ID
-    List<Booking> findByStudentId(String studentId);
-
-    // Filter by status
     List<Booking> findByStatus(String status);
 
-    // Conflict detection: same resource, same date, overlapping time, not cancelled/rejected
-    @Query("{ 'resourceId': ?0, 'date': ?1, 'status': { $in: ['PENDING','APPROVED'] }, " +
-           "'startTime': { $lt: ?3 }, 'endTime': { $gt: ?2 } }")
-    List<Booking> findConflictingBookings(Long resourceId,
+    /**
+     * Conflict rule:
+     *   Same location + same date + status is PENDING or APPROVED
+     *   + time ranges OVERLAP  →  existingStart < newEnd  AND  existingEnd > newStart
+     *
+     * This means:
+     *   ✅  Different location  →  allowed
+     *   ✅  Different date      →  allowed
+     *   ✅  Same location+date but NO time overlap  →  allowed
+     *   ❌  Same location+date+overlapping time  →  BLOCKED
+     */
+    @Query("{ " +
+           "'location': { $regex: ?0, $options: 'i' }, " +
+           "'date': ?1, " +
+           "'status': { $in: ['PENDING', 'APPROVED'] }, " +
+           "'startTime': { $lt: ?3 }, " +
+           "'endTime':   { $gt: ?2 } " +
+           "}")
+    List<Booking> findConflictingBookings(String location,
                                           LocalDate date,
                                           LocalTime newStart,
                                           LocalTime newEnd);
