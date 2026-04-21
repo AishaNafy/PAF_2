@@ -16,62 +16,41 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
 
-    /**
-     * POST /api/bookings
-     * Create a new booking request (status starts as PENDING).
-     * Returns 201 Created, or 400/409 on validation/conflict errors.
-     */
+    /** POST /api/bookings — create a new PENDING booking */
     @PostMapping
     public ResponseEntity<?> createBooking(@RequestBody Booking booking) {
-        Booking created = bookingService.createBooking(booking);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookingService.createBooking(booking));
     }
 
     /**
-     * GET /api/bookings
-     * Returns all bookings. Supports optional filters:
-     *   ?email=user@sliit.lk          → bookings for a specific user
-     *   ?status=PENDING                → bookings with a given status
-     *   ?email=...&status=...          → combined filter
+     * GET /api/bookings — returns ALL bookings.
+     * Optional filter: ?status=PENDING | APPROVED | REJECTED | CANCELLED
      */
     @GetMapping
     public ResponseEntity<List<Booking>> getBookings(
-            @RequestParam(required = false) String email,
             @RequestParam(required = false) String status) {
-        return ResponseEntity.ok(bookingService.getBookings(email, status));
+        return ResponseEntity.ok(bookingService.getBookings(status));
     }
 
-    /**
-     * GET /api/bookings/{id}
-     * Returns a single booking by ID. Returns 404 if not found.
-     */
+    /** GET /api/bookings/{id} — single booking by ID */
     @GetMapping("/{id}")
     public ResponseEntity<Booking> getBookingById(@PathVariable String id) {
         return ResponseEntity.ok(bookingService.getBookingById(id));
     }
 
     /**
-     * PUT /api/bookings/{id}/status
-     * Admin: approve or reject a booking.
-     * User:  cancel an approved booking.
-     *
-     * Request body: { "status": "APPROVED" | "REJECTED" | "CANCELLED", "reason": "..." }
-     * Returns 200 OK, or 400 if the transition is invalid.
+     * PUT /api/bookings/{id}/status — approve, reject, or cancel a booking.
+     * Body: { "status": "APPROVED" | "REJECTED" | "CANCELLED", "reason": "..." }
      */
     @PutMapping("/{id}/status")
     public ResponseEntity<Booking> updateStatus(
             @PathVariable String id,
             @RequestBody Map<String, String> payload) {
-        String newStatus = payload.get("status");
-        String reason    = payload.get("reason");
-        return ResponseEntity.ok(bookingService.updateStatus(id, newStatus, reason));
+        return ResponseEntity.ok(
+                bookingService.updateStatus(id, payload.get("status"), payload.get("reason")));
     }
 
-    /**
-     * DELETE /api/bookings/{id}
-     * Hard-delete a booking record (admin operation).
-     * Returns 204 No Content.
-     */
+    /** DELETE /api/bookings/{id} — hard-delete (admin only) */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBooking(@PathVariable String id) {
         bookingService.deleteBooking(id);

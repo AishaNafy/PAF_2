@@ -11,21 +11,13 @@ import java.util.List;
 @Repository
 public interface BookingRepository extends MongoRepository<Booking, String> {
 
-    // Filter bookings by the user's email (for "My Bookings" view)
-    List<Booking> findByUserEmail(String userEmail);
+    // Filter by student ID
+    List<Booking> findByStudentId(String studentId);
 
-    // Filter bookings by status (for admin filters)
+    // Filter by status
     List<Booking> findByStatus(String status);
 
-    // Filter by user email AND status
-    List<Booking> findByUserEmailAndStatus(String userEmail, String status);
-
-    /**
-     * Conflict detection: find any APPROVED or PENDING booking for the same
-     * resource on the same date whose time range overlaps with [newStart, newEnd].
-     *
-     * Overlap condition: existingStart < newEnd  AND  existingEnd > newStart
-     */
+    // Conflict detection: same resource, same date, overlapping time, not cancelled/rejected
     @Query("{ 'resourceId': ?0, 'date': ?1, 'status': { $in: ['PENDING','APPROVED'] }, " +
            "'startTime': { $lt: ?3 }, 'endTime': { $gt: ?2 } }")
     List<Booking> findConflictingBookings(Long resourceId,
