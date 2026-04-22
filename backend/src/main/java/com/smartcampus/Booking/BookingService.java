@@ -14,15 +14,13 @@ public class BookingService {
     @Autowired private BookingRepository        repository;
     @Autowired private SequenceGeneratorService sequenceGenerator;
 
-    // ── CREATE ───────────────────────────────────────────────────────
+    // ── CREATE ──────────────────────────────────────────────────────
 
     public Booking createBooking(Booking booking) {
 
-        // ── Field validation ─────────────────────────────────────────
+        // Validation
         if (booking.getStudentId() == null || booking.getStudentId().isBlank())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student ID is required.");
-        if (booking.getResourceId() == null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Resource ID is required.");
         if (booking.getLocation() == null || booking.getLocation().isBlank())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location is required.");
         if (booking.getDate() == null)
@@ -32,7 +30,7 @@ public class BookingService {
         if (!booking.getEndTime().isAfter(booking.getStartTime()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End time must be after start time.");
 
-        // ── Conflict check: same location + same date + time overlap ─
+        // ── Conflict check: same location + same date + overlapping time ──
         List<Booking> conflicts = repository.findConflictingBookings(
                 booking.getLocation().trim(),
                 booking.getDate(),
@@ -43,12 +41,13 @@ public class BookingService {
         if (!conflicts.isEmpty()) {
             Booking clash = conflicts.get(0);
             throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "⚠ Time slot unavailable! \"" + booking.getLocation() + "\" is already booked on "
-                    + booking.getDate() + " from " + clash.getStartTime() + " to " + clash.getEndTime()
-                    + ". Please choose a different time or location.");
+                    "This location (" + booking.getLocation() + ") is already booked on " +
+                    booking.getDate() + " from " + clash.getStartTime() +
+                    " to " + clash.getEndTime() +
+                    ". Please choose a different time slot.");
         }
 
-        // ── Save ─────────────────────────────────────────────────────
+        // Save
         booking.setId(sequenceGenerator.generateAvailableId());
         booking.setStatus("PENDING");
         booking.setCreatedAt(LocalDateTime.now());

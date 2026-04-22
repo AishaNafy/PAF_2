@@ -29,25 +29,31 @@ const BookingRow = ({ booking, onApprove, onReject, onDelete, actionLoading }) =
   return (
     <>
       <tr className="border-b border-gray-100 hover:bg-[#dafff7]/30 transition">
+        {/* Booking ID */}
         <td className="px-4 py-3">
           <span className="font-mono text-xs font-bold text-[#36bdac] bg-[#dafff7] px-2 py-0.5 rounded">
             {booking.id}
           </span>
         </td>
+        {/* Student ID */}
         <td className="px-4 py-3 text-sm text-[#010101]">
           <span className="flex items-center gap-1"><BadgeInfo size={13}/>{booking.studentId || '—'}</span>
         </td>
-        <td className="px-4 py-3 text-sm text-gray-600">#{booking.resourceId}</td>
+        {/* Location */}
         <td className="px-4 py-3 text-sm text-gray-600 hidden md:table-cell">
           <span className="flex items-center gap-1"><MapPin size={12}/>{booking.location || '—'}</span>
         </td>
+        {/* Date */}
         <td className="px-4 py-3 text-sm text-gray-600 hidden lg:table-cell">
           <span className="flex items-center gap-1"><CalendarDays size={12}/>{booking.date}</span>
         </td>
+        {/* Time */}
         <td className="px-4 py-3 text-sm text-gray-600 hidden lg:table-cell">
           <span className="flex items-center gap-1"><Clock size={12}/>{booking.startTime}–{booking.endTime}</span>
         </td>
+        {/* Status */}
         <td className="px-4 py-3"><StatusBadge status={booking.status}/></td>
+        {/* Actions */}
         <td className="px-4 py-3">
           <div className="flex items-center gap-1">
             <button onClick={() => setExpanded(v => !v)}
@@ -74,9 +80,10 @@ const BookingRow = ({ booking, onApprove, onReject, onDelete, actionLoading }) =
         </td>
       </tr>
 
+      {/* Expanded detail row */}
       {expanded && (
         <tr className="bg-[#dafff7]/20">
-          <td colSpan={8} className="px-6 py-4">
+          <td colSpan={7} className="px-6 py-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-[#010101]">
               <div>
                 <p className="text-xs text-gray-400 uppercase font-semibold mb-0.5">Attendees</p>
@@ -160,13 +167,15 @@ const AdminDashboard = () => {
     finally { setActionLoading(null); }
   };
 
-  // Client-side student filter (applied after fetch)
+  // Client-side student ID filter
   const displayed = filterStudent.trim()
     ? bookings.filter(b => b.studentId?.toLowerCase().includes(filterStudent.trim().toLowerCase()))
     : bookings;
 
-  const counts = bookings.reduce((acc, b) => { acc[b.status] = (acc[b.status] || 0) + 1; return acc; }, {});
-  const stats  = [
+  const counts = bookings.reduce((acc, b) => {
+    acc[b.status] = (acc[b.status] || 0) + 1; return acc;
+  }, {});
+  const stats = [
     { label: 'Total',    value: bookings.length,       bg: '#dafff7', border: '#36bdac' },
     { label: 'Pending',  value: counts.PENDING  || 0,  bg: '#FFF8E1', border: '#F59E0B' },
     { label: 'Approved', value: counts.APPROVED || 0,  bg: '#E8FFF5', border: '#10B981' },
@@ -228,7 +237,6 @@ const AdminDashboard = () => {
               <tr className="bg-[#dafff7] text-[#010101] text-xs uppercase tracking-wide">
                 <th className="px-4 py-3 font-semibold">Booking ID</th>
                 <th className="px-4 py-3 font-semibold">Student ID</th>
-                <th className="px-4 py-3 font-semibold">Resource</th>
                 <th className="px-4 py-3 font-semibold hidden md:table-cell">Location</th>
                 <th className="px-4 py-3 font-semibold hidden lg:table-cell">Date</th>
                 <th className="px-4 py-3 font-semibold hidden lg:table-cell">Time</th>
@@ -239,12 +247,12 @@ const AdminDashboard = () => {
             <tbody>
               {loading ? (
                 [1,2,3].map(i => (
-                  <tr key={i}><td colSpan={8} className="px-4 py-4">
+                  <tr key={i}><td colSpan={7} className="px-4 py-4">
                     <div className="h-5 bg-gray-100 rounded animate-pulse"/>
                   </td></tr>
                 ))
               ) : displayed.length === 0 ? (
-                <tr><td colSpan={8} className="px-4 py-16 text-center text-gray-400 text-sm">
+                <tr><td colSpan={7} className="px-4 py-16 text-center text-gray-400 text-sm">
                   No bookings found matching the current filters.
                 </td></tr>
               ) : (

@@ -7,15 +7,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-// ⚠ Collection name matches the one created manually in MongoDB Atlas: "Booking"
 @Document(collection = "Booking")
 public class Booking {
 
     @Id
     private String id;
 
-    private String studentId;   // e.g. IT22XXXXXXX  (replaces email)
-    private Long   resourceId;
+    private String studentId;   // e.g. IT22XXXXXXX
     private String location;
 
     private LocalDate date;
@@ -25,9 +23,7 @@ public class Booking {
     private String purpose;
     private int    attendees;
 
-    // Workflow: PENDING → APPROVED / REJECTED → (if APPROVED) CANCELLED
     private String status = "PENDING";
-
     private String rejectionReason;
 
     private LocalDateTime createdAt;
@@ -35,16 +31,11 @@ public class Booking {
 
     public Booking() {}
 
-    /* ── Getters & Setters ─────────────────────────────────────────── */
+    public String getId()                              { return id; }
+    public void   setId(String id)                     { this.id = id; }
 
-    public String getId()                        { return id; }
-    public void   setId(String id)               { this.id = id; }
-
-    public String getStudentId()                 { return studentId; }
-    public void   setStudentId(String studentId) { this.studentId = studentId; }
-
-    public Long getResourceId()                        { return resourceId; }
-    public void setResourceId(Long resourceId)         { this.resourceId = resourceId; }
+    public String getStudentId()                       { return studentId; }
+    public void   setStudentId(String studentId)       { this.studentId = studentId; }
 
     public String getLocation()                        { return location; }
     public void   setLocation(String location)         { this.location = location; }
@@ -67,12 +58,12 @@ public class Booking {
     public String getStatus()                          { return status; }
     public void   setStatus(String status)             { this.status = status; }
 
-    public String getRejectionReason()                             { return rejectionReason; }
-    public void   setRejectionReason(String rejectionReason)       { this.rejectionReason = rejectionReason; }
+    public String getRejectionReason()                       { return rejectionReason; }
+    public void   setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
 
-    public LocalDateTime getCreatedAt()                            { return createdAt; }
-    public void          setCreatedAt(LocalDateTime createdAt)     { this.createdAt = createdAt; }
+    public LocalDateTime getCreatedAt()                      { return createdAt; }
+    public void          setCreatedAt(LocalDateTime v)       { this.createdAt = v; }
 
-    public LocalDateTime getUpdatedAt()                            { return updatedAt; }
-    public void          setUpdatedAt(LocalDateTime updatedAt)     { this.updatedAt = updatedAt; }
+    public LocalDateTime getUpdatedAt()                      { return updatedAt; }
+    public void          setUpdatedAt(LocalDateTime v)       { this.updatedAt = v; }
 }

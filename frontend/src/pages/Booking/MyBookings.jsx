@@ -32,7 +32,7 @@ const BookingCard = ({ b, onCancel, cancelling }) => {
       {/* Main row */}
       <div className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex-1 min-w-0">
-          {/* ID chips + status */}
+          {/* Booking ID + Student ID + Status */}
           <div className="flex items-center gap-2 flex-wrap mb-2">
             <span className="font-mono text-xs font-bold text-[#36bdac] bg-[#dafff7] px-2 py-0.5 rounded">
               {b.id}
@@ -43,8 +43,8 @@ const BookingCard = ({ b, onCancel, cancelling }) => {
             <StatusBadge status={b.status} />
           </div>
 
-          {/* Core details grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-1 text-sm text-gray-500">
+          {/* Core details */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-1 text-sm text-gray-500">
             <span className="flex items-center gap-1"><MapPin size={13}/> {b.location || 'N/A'}</span>
             <span className="flex items-center gap-1"><CalendarDays size={13}/> {b.date || '—'}</span>
             <span className="flex items-center gap-1"><Clock size={13}/> {b.startTime} – {b.endTime}</span>
@@ -54,14 +54,11 @@ const BookingCard = ({ b, onCancel, cancelling }) => {
 
         {/* Action buttons */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* Expand toggle */}
           <button onClick={() => setExpanded(v => !v)}
             className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-400 transition"
             title="Show details">
             {expanded ? <ChevronUp size={15}/> : <ChevronDown size={15}/>}
           </button>
-
-          {/* Cancel — only for APPROVED */}
           {b.status === 'APPROVED' && (
             <button onClick={() => onCancel(b.id)} disabled={cancelling === b.id}
               className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold rounded-lg border border-red-200 text-red-600 hover:bg-red-50 transition disabled:opacity-50">
@@ -76,10 +73,6 @@ const BookingCard = ({ b, onCancel, cancelling }) => {
       {expanded && (
         <div className="border-t border-gray-100 px-5 py-4 bg-[#dafff7]/20 rounded-b-2xl">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-[#010101]">
-            <div>
-              <p className="text-xs text-gray-400 uppercase font-semibold mb-0.5">Resource ID</p>
-              <p>#{b.resourceId}</p>
-            </div>
             <div>
               <p className="text-xs text-gray-400 uppercase font-semibold mb-0.5">Purpose</p>
               <p>{b.purpose || '—'}</p>
@@ -142,7 +135,6 @@ const MyBookings = () => {
     finally { setCancelling(null); }
   };
 
-  // Summary counts
   const counts = bookings.reduce((acc, b) => {
     acc[b.status] = (acc[b.status] || 0) + 1; return acc;
   }, {});
@@ -196,14 +188,14 @@ const MyBookings = () => {
         </div>
       )}
 
-      {/* Loading skeletons */}
+      {/* Loading */}
       {loading && (
         <div className="space-y-3">
           {[1,2,3].map(i => <div key={i} className="bg-white rounded-2xl h-24 animate-pulse border border-gray-100"/>)}
         </div>
       )}
 
-      {/* Booking cards */}
+      {/* Cards */}
       {!loading && !error && (
         bookings.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-gray-400">
