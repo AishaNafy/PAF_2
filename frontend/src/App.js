@@ -7,6 +7,8 @@ import TechnicianDashboard from './pages/TechnicianDashboard';
 import ReportingDashboard from './pages/ReportingDashboard';
 import TicketDetailsPage from './pages/TicketDetailsPage';
 import AdminDashboard from './pages/AdminDashboard';
+import FacilityListPage from './pages/FacilityListPage';
+import FacilityDetailsPage from './pages/FacilityDetailsPage';
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
           <Route index element={<TicketListPage />} />
           <Route path="create" element={<TicketCreationPage />} />
           <Route path="ticket/:id" element={<TicketDetailsPage />} />
+          <Route path="facilities" element={<FacilityListPage />} />
+          <Route path="facilities/:id" element={<FacilityDetailsPage />} />
         </Route>
 
         {/* Technician Routes */}
@@ -33,6 +37,8 @@ function App() {
           <Route index element={<AdminDashboard />} />
           <Route path="reports" element={<ReportingDashboard />} />
           <Route path="ticket/:id" element={<TicketDetailsPage />} />
+          <Route path="facilities" element={<FacilityListPage />} />
+          <Route path="facilities/:id" element={<FacilityDetailsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

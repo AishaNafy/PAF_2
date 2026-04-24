@@ -20,7 +20,7 @@ public class FacilityController {
     }
 
     @GetMapping("/{id}")
-    public Facility getFacilityById(@PathVariable Long id) {
+    public Facility getFacilityById(@PathVariable String id) {
         return facilityService.getFacilityById(id);
     }
 
@@ -29,8 +29,13 @@ public class FacilityController {
         return facilityService.createFacility(facility);
     }
 
+    @PutMapping("/{id}")
+    public Facility updateFacility(@PathVariable String id, @RequestBody Facility facility) {
+        return facilityService.updateFacility(id, facility);
+    }
+
     @DeleteMapping("/{id}")
-    public void deleteFacility(@PathVariable Long id) {
+    public void deleteFacility(@PathVariable String id) {
         facilityService.deleteFacility(id);
     }
 }

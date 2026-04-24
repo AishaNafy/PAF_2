@@ -5,7 +5,8 @@ import java.util.List;
 
 public interface FacilityService {
     List<Facility> getAllFacilities();
-    Facility getFacilityById(Long id);
+    Facility getFacilityById(String id);
     Facility createFacility(Facility facility);
-    void deleteFacility(Long id);
+    Facility updateFacility(String id, Facility facility);
+    void deleteFacility(String id);
 }
