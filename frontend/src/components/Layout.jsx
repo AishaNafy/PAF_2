@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, TicketPlus, List, User } from 'lucide-react';
+import { LayoutDashboard, TicketPlus, List, User, Building } from 'lucide-react';
 
 const Layout = ({ role }) => {
   const location = useLocation();
@@ -8,9 +8,11 @@ const Layout = ({ role }) => {
   const navItems = [
     { path: `/student`, label: 'My Tickets', icon: <List size={20} />, roles: ['student'] },
     { path: `/student/create`, label: 'New Ticket', icon: <TicketPlus size={20} />, roles: ['student'] },
+    { path: `/student/facilities`, label: 'Facilities', icon: <Building size={20} />, roles: ['student'] },
     { path: `/technician`, label: 'Tech Dashboard', icon: <User size={20} />, roles: ['technician'] },
     { path: `/admin`, label: 'Admin Dashboard', icon: <List size={20} />, roles: ['admin'] },
     { path: `/admin/reports`, label: 'Reports', icon: <LayoutDashboard size={20} />, roles: ['admin'] },
+    { path: `/admin/facilities`, label: 'Facilities', icon: <Building size={20} />, roles: ['admin'] },
   ];
 
   return (

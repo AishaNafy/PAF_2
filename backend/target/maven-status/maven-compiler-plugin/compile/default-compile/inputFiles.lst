@@ -11,7 +11,6 @@
 /Users/hirushapathum/Downloads/Canteeno/PAF_2/backend/src/main/java/com/smartcampus/tickets/controller/CommentController.java
 /Users/hirushapathum/Downloads/Canteeno/PAF_2/backend/src/main/java/com/smartcampus/tickets/controller/ReportController.java
 /Users/hirushapathum/Downloads/Canteeno/PAF_2/backend/src/main/java/com/smartcampus/facilities/repository/FacilityRepository.java
-/Users/hirushapathum/Downloads/Canteeno/PAF_2/backend/src/main/java/com/smartcampus/facilities/FacilityConfig.java
 /Users/hirushapathum/Downloads/Canteeno/PAF_2/backend/src/main/java/com/smartcampus/tickets/model/Ticket.java
 /Users/hirushapathum/Downloads/Canteeno/PAF_2/backend/src/main/java/com/smartcampus/SmartCampusApplication.java
 /Users/hirushapathum/Downloads/Canteeno/PAF_2/backend/src/main/java/com/smartcampus/facilities/repository/InMemoryFacilityRepository.java
