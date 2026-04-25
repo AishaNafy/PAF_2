@@ -80,6 +80,17 @@ public class AppUserService {
         return appUserRepository.save(user);
     }
 
+    public String getEmailForUser(String nameOrId) {
+        if (nameOrId == null || nameOrId.isEmpty()) return null;
+        if (nameOrId.contains("@")) return nameOrId.toLowerCase();
+        
+        return appUserRepository.findByName(nameOrId)
+                .map(AppUser::getEmail)
+                .orElseGet(() -> appUserRepository.findById(nameOrId)
+                        .map(AppUser::getEmail)
+                        .orElse(null));
+    }
+
     public AppUser getByEmail(String email) {
         return appUserRepository.findByEmail(normalizeEmail(email))
                 .orElseThrow(() -> new ResourceNotFoundException("Authenticated user record not found"));

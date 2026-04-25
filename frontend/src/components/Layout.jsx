@@ -1,7 +1,8 @@
 import React from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, TicketPlus, List, User, Building, LogOut } from 'lucide-react';
+import { LayoutDashboard, TicketPlus, List, User, Building, LogOut, Bell } from 'lucide-react';
 import api from '../api/axiosConfig';
+import NotificationDropdown from './NotificationDropdown';
 
 const Layout = ({ role }) => {
   const location = useLocation();
@@ -63,11 +64,14 @@ const Layout = ({ role }) => {
           <h2 className="text-xl font-semibold text-gray-800">
             {navItems.find(item => location.pathname === item.path)?.label || 'Incident Management'}
           </h2>
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
-              {role.charAt(0).toUpperCase()}
+          <div className="flex items-center gap-5">
+            <NotificationDropdown />
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                {role.charAt(0).toUpperCase()}
+              </div>
+              <span className="text-sm font-medium text-gray-600 capitalize">{role}</span>
             </div>
-            <span className="text-sm font-medium text-gray-600 capitalize">{role}</span>
             <button
               id="logout-btn"
               onClick={handleLogout}
