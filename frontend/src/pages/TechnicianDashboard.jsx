@@ -2,9 +2,10 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ClipboardList, CheckCircle2, Clock, AlertTriangle,
-  ChevronRight, X, Save, RefreshCw, User, LogOut
+  ChevronRight, X, Save, RefreshCw, User, LogOut, Bell
 } from 'lucide-react';
 import api from '../api/axiosConfig';
+import NotificationDropdown from '../components/NotificationDropdown';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 const STATUS_COLORS = {
@@ -158,20 +159,23 @@ const TechnicianDashboard = () => {
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <div className="w-7 h-7 rounded-full bg-teal-100 flex items-center justify-center">
-                <User size={14} className="text-teal-700" />
+          <div className="flex items-center gap-4">
+            <NotificationDropdown />
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="w-7 h-7 rounded-full bg-teal-100 flex items-center justify-center">
+                  <User size={14} className="text-teal-700" />
+                </div>
+                <span className="font-medium">{user?.name}</span>
               </div>
-              <span className="font-medium">{user?.name}</span>
+              <button
+                id="tech-logout-btn"
+                onClick={handleLogout}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors"
+              >
+                <LogOut size={15} /> Logout
+              </button>
             </div>
-            <button
-              id="tech-logout-btn"
-              onClick={handleLogout}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors"
-            >
-              <LogOut size={15} /> Logout
-            </button>
           </div>
         </div>
       </header>

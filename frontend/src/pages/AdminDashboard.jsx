@@ -6,17 +6,23 @@ import jsPDF from 'jspdf';
 const AdminDashboard = () => {
   const { role } = useOutletContext();
   const [tickets, setTickets] = useState([]);
+  const [technicians, setTechnicians] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [assignedTo, setAssignedTo] = useState('');
   const [updateStatus, setUpdateStatus] = useState('');
   const [resolutionNotes, setResolutionNotes] = useState('');
 
-  const fetchTickets = async () => {
+  const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/tickets');
-      setTickets(response.data.content);
+      const [ticketsRes, usersRes] = await Promise.all([
+        api.get('/tickets'),
+        api.get('/admin/users')
+      ]);
+      setTickets(ticketsRes.data.content);
+      // Filter for technicians
+      setTechnicians(usersRes.data.filter(u => u.role === 'TECHNICIAN'));
     } catch (err) {
       console.error(err);
     } finally {
@@ -25,7 +31,7 @@ const AdminDashboard = () => {
   };
 
   useEffect(() => {
-    fetchTickets();
+    fetchData();
   }, []);
 
   const handleUpdateTicket = async (e) => {
@@ -37,7 +43,7 @@ const AdminDashboard = () => {
         resolutionNotes: resolutionNotes
       });
       setSelectedTicket(null);
-      fetchTickets();
+      fetchData();
     } catch (err) {
       console.error(err);
     }
@@ -228,9 +234,9 @@ const AdminDashboard = () => {
                       className="input-field"
                    >
                      <option value="">-- Unassigned --</option>
-                     <option value="TechUser">TechUser (Default Technician)</option>
-                     <option value="John Doe (IT)">John Doe (IT)</option>
-                     <option value="Jane Smith (Maintenance)">Jane Smith (Maintenance)</option>
+                     {technicians.map(tech => (
+                        <option key={tech.id} value={tech.name}>{tech.name}</option>
+                     ))}
                    </select>
                 </div>
                 <div>
