@@ -9,6 +9,7 @@ import TicketDetailsPage from './pages/TicketDetailsPage';
 import AdminDashboard from './pages/AdminDashboard';
 import FacilityListPage from './pages/FacilityListPage';
 import FacilityDetailsPage from './pages/FacilityDetailsPage';
+import StudentProfile from './pages/StudentProfile';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route index element={<TicketListPage />} />
           <Route path="create" element={<TicketCreationPage />} />
           <Route path="ticket/:id" element={<TicketDetailsPage />} />
+          <Route path="profile" element={<StudentProfile />} />
           <Route path="facilities" element={<FacilityListPage />} />
           <Route path="facilities/:id" element={<FacilityDetailsPage />} />
         </Route>

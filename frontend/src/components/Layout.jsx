@@ -1,9 +1,10 @@
 import React from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, TicketPlus, List, User, Building } from 'lucide-react';
 
 const Layout = ({ role }) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { path: `/student`, label: 'My Tickets', icon: <List size={20} />, roles: ['student'] },
@@ -53,7 +54,7 @@ const Layout = ({ role }) => {
           <h2 className="text-xl font-semibold text-gray-800">
             {navItems.find(item => location.pathname === item.path)?.label || 'Incident Management'}
           </h2>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => navigate('/student/profile')}>
             <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
               {role.charAt(0).toUpperCase()}
             </div>
