@@ -9,6 +9,9 @@ import TechnicianDashboard from './pages/TechnicianDashboard';
 import ReportingDashboard from './pages/ReportingDashboard';
 import TicketDetailsPage from './pages/TicketDetailsPage';
 import AdminDashboard from './pages/AdminDashboard';
+import BookingRequestPage from './pages/Booking/BookingRequestPage'; // Booking
+import MyBookings from './pages/Booking/MyBookings'; // Booking
+import BookingAdminDashboard from './pages/Booking/AdminDashboard'; // Booking (Renamed to avoid conflict)
 import FacilityListPage from './pages/FacilityListPage';
 import FacilityDetailsPage from './pages/FacilityDetailsPage';
 import UserManagementPage from './pages/UserManagementPage';
@@ -17,6 +20,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Redirect root to student by default */}
+        <Route path="/" element={<Navigate to="/student" replace />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -26,6 +31,8 @@ function App() {
           <Route index element={<TicketListPage />} />
           <Route path="create" element={<TicketCreationPage />} />
           <Route path="ticket/:id" element={<TicketDetailsPage />} />
+          <Route path="book" element={<BookingRequestPage />} /> {/* Booking */}
+          <Route path="my-bookings" element={<MyBookings />} /> {/* Booking */}
           <Route path="facilities" element={<FacilityListPage />} />
           <Route path="facilities/:id" element={<FacilityDetailsPage />} />
         </Route>
@@ -40,6 +47,7 @@ function App() {
           <Route path="reports" element={<ReportingDashboard />} />
           <Route path="users" element={<UserManagementPage />} />
           <Route path="ticket/:id" element={<TicketDetailsPage />} />
+          <Route path="manage-bookings" element={<BookingAdminDashboard />} /> {/* Booking */}
           <Route path="facilities" element={<FacilityListPage />} />
           <Route path="facilities/:id" element={<FacilityDetailsPage />} />
         </Route>
