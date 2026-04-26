@@ -20,8 +20,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Redirect root to student by default */}
-        <Route path="/" element={<Navigate to="/student" replace />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
