@@ -1,7 +1,7 @@
 package com.smartcampus.auth.service;
 
 import com.smartcampus.auth.model.AppUser;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.stereotype.Service;
 
+import org.bson.Document;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
@@ -26,14 +26,14 @@ public class ReportService {
         Aggregation statusAgg = newAggregation(
             group("status").count().as("count")
         );
-        AggregationResults<Map> statusResults = mongoTemplate.aggregate(statusAgg, Ticket.class, Map.class);
+        AggregationResults<Document> statusResults = mongoTemplate.aggregate(statusAgg, Ticket.class, Document.class);
         stats.put("ticketsByStatus", statusResults.getMappedResults());
 
         // Group by Priority
         Aggregation priorityAgg = newAggregation(
             group("priority").count().as("count")
         );
-        AggregationResults<Map> priorityResults = mongoTemplate.aggregate(priorityAgg, Ticket.class, Map.class);
+        AggregationResults<Document> priorityResults = mongoTemplate.aggregate(priorityAgg, Ticket.class, Document.class);
         stats.put("ticketsByPriority", priorityResults.getMappedResults());
         
         // Simulating monthly trends (would normally do date extraction aggregation)
@@ -42,7 +42,7 @@ public class ReportService {
         Aggregation categoryAgg = newAggregation(
                 group("category").count().as("count")
         );
-        AggregationResults<Map> categoryResults = mongoTemplate.aggregate(categoryAgg, Ticket.class, Map.class);
+        AggregationResults<Document> categoryResults = mongoTemplate.aggregate(categoryAgg, Ticket.class, Document.class);
         stats.put("ticketsByCategory", categoryResults.getMappedResults());
 
         return stats;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bell, Check, Trash2, Clock, Inbox, ChevronRight } from 'lucide-react';
+import { Bell, Clock, Inbox, ChevronRight } from 'lucide-react';
 import api from '../api/axiosConfig';
 
 const NotificationDropdown = () => {

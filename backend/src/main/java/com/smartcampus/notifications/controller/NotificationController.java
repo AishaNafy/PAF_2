@@ -31,7 +31,7 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('STUDENT', 'TECHNICIAN', 'ADMIN')")
     public ResponseEntity<Page<Notification>> getNotifications(
             @RequestParam(defaultValue = "false") boolean onlyUnread,
             @RequestParam(defaultValue = "0") int page,
@@ -45,21 +45,21 @@ public class NotificationController {
     }
 
     @GetMapping("/unread-count")
-    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('STUDENT', 'TECHNICIAN', 'ADMIN')")
     public ResponseEntity<Map<String, Long>> getUnreadCount() {
         long count = notificationService.countUnread(SecurityUtils.currentUserEmail());
         return ResponseEntity.ok(Map.of("count", count));
     }
 
     @PatchMapping("/{id}/read")
-    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('STUDENT', 'TECHNICIAN', 'ADMIN')")
     public ResponseEntity<Notification> markAsRead(@PathVariable String id) {
         Notification notification = notificationService.markAsRead(id, SecurityUtils.currentUserEmail());
         return ResponseEntity.ok(notification);
     }
 
     @PatchMapping("/read-all")
-    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('STUDENT', 'TECHNICIAN', 'ADMIN')")
     public ResponseEntity<Map<String, Long>> markAllAsRead() {
         long updated = notificationService.markAllAsRead(SecurityUtils.currentUserEmail());
         return ResponseEntity.ok(Map.of("updatedCount", updated));
