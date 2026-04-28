@@ -62,11 +62,11 @@ public class TicketController {
         Sort.Direction direction = sortParams[1].equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortParams[0]));
         
-        // Security logic: If student, they only see THEIR tickets
+        // Security logic: If student, they only see THEIR tickets (Temporarily Disabled for Demo)
         String filterCreatedBy = createdBy;
-        if (SecurityUtils.hasRole("STUDENT")) {
-            filterCreatedBy = SecurityUtils.currentUserEmail();
-        }
+        // if (SecurityUtils.hasRole("STUDENT")) {
+        //     filterCreatedBy = SecurityUtils.currentUserEmail();
+        // }
         
         Page<Ticket> tickets = ticketService.getTickets(status, priority, category, filterCreatedBy, assignedTo, pageable);
         return ResponseEntity.ok(tickets);

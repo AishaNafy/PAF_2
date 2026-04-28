@@ -65,7 +65,7 @@ public class TicketService {
             query.addCriteria(Criteria.where("createdBy").is(createdBy));
         }
         if (assignedTo != null && !assignedTo.isEmpty()) {
-            query.addCriteria(Criteria.where("assignedTo").is(assignedTo));
+            query.addCriteria(Criteria.where("assignedTo").regex("^" + java.util.regex.Pattern.quote(assignedTo) + "$", "i"));
         }
 
         long count = mongoTemplate.count(query, Ticket.class);

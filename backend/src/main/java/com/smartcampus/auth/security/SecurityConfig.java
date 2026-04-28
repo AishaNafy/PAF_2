@@ -49,13 +49,17 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/tickets/**").hasAnyRole("ADMIN", "TECHNICIAN", "STUDENT")
+                        .requestMatchers("/api/bookings/**").hasAnyRole("ADMIN", "STUDENT")
+                        .requestMatchers("/api/facilities/**").hasAnyRole("ADMIN", "TECHNICIAN", "STUDENT")
+                        .requestMatchers("/api/reports/**").hasRole("ADMIN")
+                        .requestMatchers("/api/notifications/**").hasAnyRole("ADMIN", "TECHNICIAN", "STUDENT")
                         .requestMatchers("/api/profile/**").authenticated()
                         .requestMatchers("/api/auth/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        .sessionFixation(fixation -> fixation.none())
+                        .sessionFixation(fixation -> fixation.migrateSession())
                 )
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))

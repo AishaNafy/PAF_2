@@ -1,4 +1,4 @@
-package com.smartcampus.Booking;
+package com.smartcampus.booking;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/bookings")
-@CrossOrigin(origins = "http://localhost:3000")
 public class BookingController {
 
     @Autowired
@@ -33,10 +32,11 @@ public class BookingController {
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String studentId) {
         
+        // Security logic: Temporarily Disabled for Demo
         String filterStudentId = studentId;
-        if (SecurityUtils.hasRole("STUDENT")) {
-            filterStudentId = SecurityUtils.currentUserEmail();
-        }
+        // if (SecurityUtils.hasRole("STUDENT")) {
+        //     filterStudentId = SecurityUtils.currentUserEmail();
+        // }
         
         return ResponseEntity.ok(bookingService.getBookings(status, filterStudentId));
     }

@@ -1,4 +1,4 @@
-package com.smartcampus.Booking;
+package com.smartcampus.booking;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
