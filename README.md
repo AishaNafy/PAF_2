@@ -194,26 +194,6 @@ Ensure the following variables are configured in your environment or `applicatio
 
 ---
 
-## Summary of Key Dependencies
-
-If you ever need to manually verify the core libraries, here they are:
-
-**Backend (`pom.xml`):**
-* `spring-boot-starter-web`: Core web capabilities (REST APIs).
-* `spring-boot-starter-data-mongodb`: Connects to MongoDB.
-* `spring-boot-starter-validation`: Validating incoming request bodies.
-* `lombok`: Boilerplate code reduction.
-
-**Frontend (`package.json`):**
-* `react` / `react-dom` (^19.x)
-* `react-router-dom`: For page navigation.
-* `axios`: For making HTTP API requests to the backend.
-* `recharts`: For rendering ticket status charts.
-* `tailwindcss` (v3.x) & `postcss` & `autoprefixer`: For modern UI styling.
-* `lucide-react`: For icon assets.
-
----
-
 ## CI/CD
 
 GitHub Actions is configured for automated pipelines:
