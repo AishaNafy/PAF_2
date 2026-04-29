@@ -101,49 +101,30 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // ── 4. Sample Tickets ────────────────────────────────────────
-        if (ticketRepository.count() == 0) {
-            createTicket("Leaking pipe in Block A",
-                    "There is a significant water leak in the men's washroom on the 2nd floor of Block A. Water is pooling on the floor.",
-                    "Maintenance", "High", "Open", studentEmail, null, null);
+        ticketRepository.deleteAll();
 
-            createTicket("Wi-Fi not working in Library",
-                    "The Wi-Fi network 'CampusNet' is not accessible in the entire library building since yesterday morning.",
-                    "IT", "Critical", "In Progress", studentEmail, "Mike Technician",
-                    null);
+        // Use the helper method to create sample tickets
+        // Assigned to null means it's unassigned, assigned to techEmail means it's
+        // assigned to the technician
+        createTicket("Leaking Pipe in Block B",
+                "Water is leaking from the ceiling in the 2nd-floor washroom. Needs urgent repair.",
+                "Maintenance", "High", "Open", studentEmail, null, null);
 
-            createTicket("Broken window in Lab 3",
-                    "One of the windows in Computer Lab 3 has a large crack and needs immediate replacement for safety.",
-                    "Maintenance", "Medium", "Open", studentEmail, null, null);
+        createTicket("Projector Not Working",
+                "The projector in Lecture Hall A is not turning on despite multiple attempts.",
+                "IT", "Medium", "In Progress", studentEmail, techEmail, "Checking the power supply and VGA cable.");
 
-            createTicket("AC not functioning in Room 204",
-                    "The air conditioning unit in lecture room 204 has stopped working. The room becomes very hot during afternoon lectures.",
-                    "Maintenance", "High", "Resolved", studentEmail, "Mike Technician",
-                    "Compressor was faulty and has been replaced. AC is now functioning normally.");
+        createTicket("Broken Chair",
+                "One of the chairs in Computer Lab 1 (Lab B) has a broken leg.",
+                "Facilities", "Low", "Open", studentEmail, null, null);
 
-            createTicket("Projector malfunction in Hall B",
-                    "The projector in Seminar Hall B is displaying a flickering image and sometimes shuts off during presentations.",
-                    "IT", "Medium", "In Progress", studentEmail, "Mike Technician", null);
-
-            createTicket("Dirty corridors near canteen",
-                    "The corridors leading to the canteen area have not been cleaned for days. There is litter and food waste on the floor.",
-                    "Cleaning", "Low", "Open", studentEmail, null, null);
-
-            createTicket("Security camera offline - Parking Lot",
-                    "Camera #5 covering the east parking lot has been offline since last week. This is a security concern.",
-                    "IT", "Critical", "Open", studentEmail, null, null);
-
-            createTicket("Elevator stuck on 3rd floor",
-                    "The main elevator in Block C is stuck on the 3rd floor and is not operational. Students need to use stairs.",
-                    "Maintenance", "Critical", "Resolved", studentEmail, "Mike Technician",
-                    "Motor controller was reset and elevator is back in service. Scheduled for full maintenance next week.");
-
-            System.out.println("[DataInitializer] 8 sample tickets created.");
-        }
+        System.out.println("[DataInitializer] 3 sample tickets created.");
 
         // ── 5. Sample Facilities ─────────────────────────────────────
         if (facilityRepository.count() == 0) {
             createFacility("Main Auditorium", "Lecture Hall", "Block A, Ground Floor", 500,
-                    "ACTIVE", "Large auditorium with stage, projector, and sound system. Suitable for events and large lectures.",
+                    "ACTIVE",
+                    "Large auditorium with stage, projector, and sound system. Suitable for events and large lectures.",
                     "08:00 - 20:00 (Mon-Sat)");
 
             createFacility("Computer Lab 1", "Lab", "Block B, 2nd Floor", 40,
@@ -167,7 +148,8 @@ public class DataInitializer implements CommandLineRunner {
                     "08:00 - 18:00 (Mon-Fri)");
 
             createFacility("Chemistry Lab", "Lab", "Science Block, Ground Floor", 30,
-                    "OUT_OF_SERVICE", "Lab with fume hoods and chemical storage. Currently under renovation due to ventilation issues.",
+                    "OUT_OF_SERVICE",
+                    "Lab with fume hoods and chemical storage. Currently under renovation due to ventilation issues.",
                     "Closed until further notice");
 
             createFacility("Basketball Court", "Sports Facility", "Outdoor Sports Area", 30,
@@ -201,8 +183,8 @@ public class DataInitializer implements CommandLineRunner {
     // ── Helper Methods ───────────────────────────────────────────────
 
     private void createTicket(String title, String description, String category,
-                              String priority, String status, String createdBy,
-                              String assignedTo, String resolutionNotes) {
+            String priority, String status, String createdBy,
+            String assignedTo, String resolutionNotes) {
         Ticket ticket = new Ticket();
         ticket.setTitle(title);
         ticket.setDescription(description);
@@ -215,13 +197,13 @@ public class DataInitializer implements CommandLineRunner {
         ticket.setEmail(createdBy);
         ticket.setPhoneNumber("0771234567");
         ticket.setIncidentDate("2026-04-25");
-        ticket.setCreatedAt(LocalDateTime.now().minusDays((long)(Math.random() * 14)));
+        ticket.setCreatedAt(LocalDateTime.now().minusDays((long) (Math.random() * 14)));
         ticket.setUpdatedAt(LocalDateTime.now());
         ticketRepository.save(ticket);
     }
 
     private void createFacility(String name, String type, String location, int capacity,
-                                String status, String description, String availabilityWindows) {
+            String status, String description, String availabilityWindows) {
         Facility facility = new Facility();
         facility.setName(name);
         facility.setType(type);
@@ -234,8 +216,8 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void createBooking(String id, String studentId, String location, String date,
-                               String startTime, String endTime, String purpose,
-                               int attendees, String status, String rejectionReason) {
+            String startTime, String endTime, String purpose,
+            int attendees, String status, String rejectionReason) {
         Booking booking = new Booking();
         booking.setId(id);
         booking.setStudentId(studentId);
@@ -247,7 +229,7 @@ public class DataInitializer implements CommandLineRunner {
         booking.setAttendees(attendees);
         booking.setStatus(status);
         booking.setRejectionReason(rejectionReason);
-        booking.setCreatedAt(LocalDateTime.now().minusDays((long)(Math.random() * 7)));
+        booking.setCreatedAt(LocalDateTime.now().minusDays((long) (Math.random() * 7)));
         booking.setUpdatedAt(LocalDateTime.now());
         bookingRepository.save(booking);
     }
