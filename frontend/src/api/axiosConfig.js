@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://it3030-paf-2026-smart-campus-group-100-wie6.onrender.com', // Backend base URL
+  baseURL: 'http://localhost:8080/api', // Backend base URL
   withCredentials: true
 });
 
