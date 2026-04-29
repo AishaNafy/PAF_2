@@ -148,14 +148,20 @@ PAF_2/
 
 ## How to Run the Project
 
-### Quick Execution
+### Database Configuration:
+Ensure your MongoDB instance is running and update the connection string in `backend/src/main/resources/application.properties`:
+```properties
+spring.data.mongodb.uri=mongodb+srv://<username>:<password>@cluster0.mongodb.net/smartcampus_db
+```
 
-**Backend:**
+### Run the Backend Server:
+Navigate to the `backend` directory and execute:
 ```bash
 mvn spring-boot:run
 ```
 
-**Frontend:**
+### Run the Frontend Server:
+Navigate to the `frontend` directory and execute:
 ```bash
 npm start
 ```
